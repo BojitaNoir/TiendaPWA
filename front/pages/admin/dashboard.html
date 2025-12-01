@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/front/manifest.json">
+  <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/assets/css/styles.css">
+  <link rel="stylesheet" href="/front/assets/css/responsive.css">
+  
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #f47b25;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+    
+    body {
+      background: #f8f9fa;
+      font-family: 'Work Sans', 'Segoe UI', sans-serif;
+    }
+    
+    .sidebar {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      padding-top: 0;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .sidebar-header {
+      padding: 25px 20px;
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-header h4 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    
+    .sidebar-menu {
+      padding: 25px 0;
+    }
+    
+    .sidebar-menu a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-left-color: white;
+      padding-left: 25px;
+    }
+    
+    .sidebar-menu a i {
+      width: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .main-content {
+      margin-left: 250px;
+      padding-top: 0;
+      transition: all 0.3s;
+    }
+    
+    .topbar {
+      background: white;
+      padding: 20px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+    }
+    
+    .topbar h2 {
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .topbar .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .topbar .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), #1e40af);
+    }
+    
+    .stat-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
+      transform: translateY(-4px);
+    }
+    
+    .stat-card h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 15px 0 10px;
+    }
+    
+    .stat-card p {
+      color: #6b7280;
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .stat-card i {
+      font-size: 2rem;
+      color: var(--primary);
+      opacity: 0.2;
+    }
+    
+    .container-fluid {
+      padding: 30px;
+    }
+    
+    .card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      border: none;
+      font-weight: 700;
+      padding: 20px;
+    }
+    
+    .table {
+      margin-bottom: 0;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(37, 99, 235, 0.05);
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 60px;
+        padding-top: 10px;
+      }
+      
+      .sidebar-header h4 {
+        display: none;
+      }
+      
+      .sidebar-menu a span {
+        display: none;
+      }
+      
+      .main-content {
+        margin-left: 60px;
+      }
+    }
+  </style>
+  
+  <title>Dashboard Admin</title>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <i class="bi bi-shop" style="font-size: 1.5rem;"></i>
+      <h4>Tienda UCQ</h4>
+    </div>
+    
+    <div class="sidebar-menu">
+      <a href="/front/pages/admin/dashboard.html" class="active">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/front/pages/admin/pedidos.html">
+        <i class="bi bi-box-seam"></i>
+        <span>Pedidos</span>
+      </a>
+      <a href="/front/pages/admin/productos.html">
+        <i class="bi bi-box"></i>
+        <span>Productos</span>
+      </a>
+      <a href="/front/pages/admin/tiendas.html">
+        <i class="bi bi-shop"></i>
+        <span>Tiendas</span>
+      </a>
+      <a href="/front/pages/admin/repartidores.html">
+        <i class="bi bi-person-badge"></i>
+        <span>Repartidores</span>
+      </a>
+      <a href="/front/pages/admin/notificaciones.html">
+        <i class="bi bi-bell"></i>
+        <span>Notificaciones</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <h2 class="mb-0"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+      <div>
+        <span class="badge bg-info me-3" id="user-badge">Admin</span>
+        <button class="btn btn-sm btn-outline-danger" onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid p-4">
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <i class="bi bi-box-seam" style="font-size: 2rem; color: #2563eb;"></i>
+            <h3>156</h3>
+            <p>Pedidos Hoy</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card" style="border-left-color: #10b981;">
+            <i class="bi bi-check-circle" style="font-size: 2rem; color: #10b981;"></i>
+            <h3>89</h3>
+            <p>Completados</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card" style="border-left-color: #f59e0b;">
+            <i class="bi bi-hourglass" style="font-size: 2rem; color: #f59e0b;"></i>
+            <h3>42</h3>
+            <p>En Proceso</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card" style="border-left-color: #ef4444;">
+            <i class="bi bi-exclamation-circle" style="font-size: 2rem; color: #ef4444;"></i>
+            <h3>25</h3>
+            <p>Pendientes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tables Section -->
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">Últimos Pedidos</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#P001</td>
+                    <td>Juan García</td>
+                    <td>$150.00</td>
+                    <td><span class="badge bg-warning">En proceso</span></td>
+                  </tr>
+                  <tr>
+                    <td>#P002</td>
+                    <td>María López</td>
+                    <td>$220.00</td>
+                    <td><span class="badge bg-success">Completado</span></td>
+                  </tr>
+                  <tr>
+                    <td>#P003</td>
+                    <td>Carlos Rodríguez</td>
+                    <td>$85.50</td>
+                    <td><span class="badge bg-secondary">Pendiente</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">Repartidores Activos</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Entregas</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Pedro García</td>
+                    <td>12</td>
+                    <td><span class="badge bg-success">En trabajo</span></td>
+                  </tr>
+                  <tr>
+                    <td>Ana Martínez</td>
+                    <td>8</td>
+                    <td><span class="badge bg-success">En trabajo</span></td>
+                  </tr>
+                  <tr>
+                    <td>Luis Rodríguez</td>
+                    <td>5</td>
+                    <td><span class="badge bg-info">Disponible</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/front/js/app.js"></script>
+  <script src="/front/js/offline.js"></script>
+
+  <script>
+    function checkAuth() {
+      const role = localStorage.getItem('user_role');
+      if (role !== 'admin') {
+        window.location.href = '/front/login.html';
+        return;
+      }
+      document.getElementById('user-badge').textContent = role?.toUpperCase() || 'USER';
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/front/login.html';
+    }
+
+    // Check auth on page load
+    checkAuth();
+  </script>
+</body>
+</html>

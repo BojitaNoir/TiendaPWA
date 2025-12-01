@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f47b25">
+  <link rel="manifest" href="/front/manifest.json">
+  <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/assets/css/styles.css">
+  <title>Mi Perfil</title>
+</head>
+<body>
+  <style>
+    :root { --primary: #f47b25; }
+    .topbar {
+      background: linear-gradient(135deg, var(--primary), #d96a1a);
+      color: white;
+      padding: 15px 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar h2 { margin: 0; }
+    .nav-tabs {
+      background: white;
+      border-bottom: 2px solid #e5e5e5;
+      padding: 0 20px;
+      margin: 0;
+    }
+    .nav-tabs .nav-link {
+      color: #6b7280;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav-tabs .nav-link:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .nav-tabs .nav-link.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: none;
+    }
+    .main-content { padding: 20px; }
+  </style>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <h2 class="mb-0"><i class="bi bi-person-circle"></i> Mi Perfil</h2>
+    <button class="btn btn-sm btn-outline-light" onclick="logout()">
+      <i class="bi bi-box-arrow-right"></i> Salir
+    </button>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs" role="tablist">
+    <a href="/front/pages/repartidor/inicio.html" class="nav-link">
+      <i class="bi bi-house"></i> Inicio
+    </a>
+    <a href="/front/pages/repartidor/pedidos.html" class="nav-link">
+      <i class="bi bi-box-seam"></i> Mis Pedidos
+    </a>
+    <a href="/front/pages/repartidor/perfil.html" class="nav-link active">
+      <i class="bi bi-person"></i> Mi Perfil
+    </a>
+  </div>
+
+  <!-- Content -->
+  <div class="main-content">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header" style="background: linear-gradient(135deg, var(--primary), #d96a1a); color: white;">
+            <h5 class="mb-0"><i class="bi bi-person"></i> Información Personal</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>Nombre:</strong> Pedro García</p>
+            <p><strong>Teléfono:</strong> 300-123-4567</p>
+            <p><strong>Email:</strong> pedro@example.com</p>
+            <p><strong>Cédula:</strong> 1234567890</p>
+            <p><strong>Estado:</strong> <span class="badge bg-success">Activo</span></p>
+            <button class="btn" style="background: var(--primary); color: white; border: none;" onclick="editProfile()">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header" style="background: linear-gradient(135deg, var(--primary), #d96a1a); color: white;">
+            <h5 class="mb-0"><i class="bi bi-graph-up"></i> Estadísticas</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>Entregas Totales:</strong> 145</p>
+            <p><strong>Entregas Este Mes:</strong> 34</p>
+            <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐ (4.8/5)</p>
+            <p><strong>Horas Trabajadas:</strong> 156 horas</p>
+            <p><strong>Ingresos Este Mes:</strong> $1,250.00</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header" style="background: linear-gradient(135deg, var(--primary), #d96a1a); color: white;">
+        <h5 class="mb-0"><i class="bi bi-car-front"></i> Vehículo</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Placa:</strong> ABC-123</p>
+        <p><strong>Marca/Modelo:</strong> Chevrolet Spark 2023</p>
+        <p><strong>Capacidad:</strong> 50 kg</p>
+        <p><strong>Seguro:</strong> <span class="badge bg-success">Activo</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function checkAuth() {
+      if (localStorage.getItem('user_role') !== 'repartidor') {
+        window.location.href = '/front/login.html';
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/front/login.html';
+    }
+
+    function editProfile() {
+      alert('Función de edición próximamente');
+    }
+
+    checkAuth();
+  </script>
+</body>
+</html>

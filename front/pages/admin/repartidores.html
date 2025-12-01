@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/front/manifest.json">
+  <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/assets/css/styles.css">
+  <title>Gestión de Repartidores</title>
+</head>
+<body>
+  <style>
+    :root { --primary: #2563eb; }
+    
+    body {
+      background: #f8f9fa;
+      font-family: 'Work Sans', 'Segoe UI', sans-serif;
+    }
+    
+    .sidebar {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      padding-top: 0;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .sidebar-header { 
+      padding: 25px 20px; 
+      border-bottom: 2px solid rgba(255,255,255,0.15); 
+      display: flex; 
+      align-items: center; 
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-header h4 { 
+      margin: 0; 
+      font-size: 1.3rem; 
+      font-weight: 700;
+    }
+    
+    .sidebar-menu { 
+      padding: 25px 0; 
+    }
+    
+    .sidebar-menu a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-left-color: white;
+      padding-left: 25px;
+    }
+    
+    .sidebar-menu a i {
+      width: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .main-content { 
+      margin-left: 250px; 
+      padding-top: 0;
+      transition: all 0.3s;
+    }
+    
+    .topbar {
+      background: white;
+      padding: 20px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+    }
+    
+    .topbar h2 {
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .topbar .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .topbar .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      border: none;
+      font-weight: 700;
+      padding: 20px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1e40af, var(--primary));
+      transform: translateY(-2px);
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(37, 99, 235, 0.05);
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+    }
+    
+    .modal-header .btn-close {
+      filter: invert(1) brightness(2);
+    }
+    
+    .container-fluid {
+      padding: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar-header h4 { display: none; }
+      .sidebar-menu a span { display: none; }
+      .main-content { margin-left: 60px; }
+    }
+  </style>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <i class="bi bi-truck" style="font-size: 1.5rem;"></i>
+      <h4>Tienda UCQ</h4>
+    </div>
+    <div class="sidebar-menu">
+      <a href="/front/pages/admin/dashboard.html">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/front/pages/admin/pedidos.html">
+        <i class="bi bi-box-seam"></i>
+        <span>Pedidos</span>
+      </a>
+      <a href="/front/pages/admin/productos.html">
+        <i class="bi bi-box"></i>
+        <span>Productos</span>
+      </a>
+      <a href="/front/pages/admin/tiendas.html">
+        <i class="bi bi-shop"></i>
+        <span>Tiendas</span>
+      </a>
+      <a href="/front/pages/admin/repartidores.html" class="active">
+        <i class="bi bi-person-badge"></i>
+        <span>Repartidores</span>
+      </a>
+      <a href="/front/pages/admin/notificaciones.html">
+        <i class="bi bi-bell"></i>
+        <span>Notificaciones</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <h2 class="mb-0"><i class="bi bi-person-badge"></i> Gestión de Repartidores</h2>
+      <div>
+        <span class="badge bg-info me-3" id="user-badge">Admin</span>
+        <button class="btn btn-sm btn-outline-danger" onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid py-4">
+      <div class="row my-3">
+        <div class="col-md-4"><input type="text" class="form-control" placeholder="Buscar repartidor..."></div>
+        <div class="col-md-4">
+          <select class="form-select">
+            <option>Todos</option>
+            <option>Activos</option>
+            <option>Inactivos</option>
+          </select>
+        </div>
+        <div class="col-md-4"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#newRepartidorModal"><i class="bi bi-plus-circle"></i> Nuevo Repartidor</button></div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Entregas</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Pedro García</td><td>3001234567</td><td>pedro@example.com</td><td><span class="badge bg-success">Activo</span></td><td>145</td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleRepartidorModal" onclick="verDetalleRepartidor('Pedro García', '3001234567', 'pedro@example.com', 'Activo', '145')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarRepartidor('pedro')">Eliminar</button></td></tr>
+              <tr><td>Ana Martínez</td><td>3009876543</td><td>ana@example.com</td><td><span class="badge bg-success">Activo</span></td><td>189</td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleRepartidorModal" onclick="verDetalleRepartidor('Ana Martínez', '3009876543', 'ana@example.com', 'Activo', '189')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarRepartidor('ana')">Eliminar</button></td></tr>
+              <tr><td>Luis Rodríguez</td><td>3001112222</td><td>luis@example.com</td><td><span class="badge bg-secondary">Inactivo</span></td><td>78</td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleRepartidorModal" onclick="verDetalleRepartidor('Luis Rodríguez', '3001112222', 'luis@example.com', 'Inactivo', '78')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarRepartidor('luis')">Eliminar</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nuevo Repartidor -->
+  <div class="modal fade" id="newRepartidorModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo Repartidor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newRepartidorForm">
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Estado</label>
+              <select class="form-select" required>
+                <option value="">Seleccionar estado</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Crear Repartidor</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ver Detalle Repartidor -->
+  <div class="modal fade" id="detalleRepartidorModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles del Repartidor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <strong>Nombre:</strong>
+            <p id="detalle-repartidor-nombre" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Teléfono:</strong>
+            <p id="detalle-repartidor-telefono" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Email:</strong>
+            <p id="detalle-repartidor-email" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Estado:</strong>
+            <p id="detalle-repartidor-estado" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Entregas:</strong>
+            <p id="detalle-repartidor-entregas" class="mb-0"></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function checkAuth() { if (localStorage.getItem('user_role') !== 'admin') window.location.href = '/front/login.html'; }
+    function logout() { localStorage.clear(); window.location.href = '/front/login.html'; }
+
+    function verDetalleRepartidor(nombre, telefono, email, estado, entregas) {
+      document.getElementById('detalle-repartidor-nombre').textContent = nombre;
+      document.getElementById('detalle-repartidor-telefono').textContent = telefono;
+      document.getElementById('detalle-repartidor-email').textContent = email;
+      document.getElementById('detalle-repartidor-estado').textContent = estado;
+      document.getElementById('detalle-repartidor-entregas').textContent = entregas;
+    }
+
+    function eliminarRepartidor(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este repartidor?')) {
+        alert('Repartidor eliminado correctamente');
+        location.reload();
+      }
+    }
+
+    document.getElementById('newRepartidorForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Repartidor creado correctamente');
+      bootstrap.Modal.getInstance(document.getElementById('newRepartidorModal')).hide();
+      this.reset();
+    });
+
+    checkAuth();
+  </script>
+</body>
+</html>

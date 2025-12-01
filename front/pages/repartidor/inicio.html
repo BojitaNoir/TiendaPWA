@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f47b25">
+  <link rel="manifest" href="/front/manifest.json">
+  <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/assets/css/styles.css">
+  <style>
+    :root { --primary: #f47b25; }
+    
+    body {
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .topbar {
+      background: linear-gradient(135deg, var(--primary), #d96a1a);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(244, 123, 37, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    
+    .topbar-left h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+    .topbar-left small { opacity: 0.9; display: block; margin-top: 4px; font-size: 0.9rem; }
+    
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .user-info .badge {
+      font-size: 0.85rem;
+      padding: 4px 12px;
+    }
+    
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      position: static;
+      top: auto;
+      right: auto;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .progress-section {
+      background: white;
+      padding: 30px;
+      margin: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .progress-section h3 {
+      margin-bottom: 15px;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    
+    .progress-stats {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .stat-item strong {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .stat-item p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    
+    .progress-section .progress {
+      height: 35px;
+      border-radius: 20px;
+      background: #f0f0f0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, var(--primary), #d96a1a);
+      border-radius: 20px;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-width: 40px;
+    }
+    
+    .visit-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+      padding: 30px;
+      background: transparent;
+    }
+    
+    .visit-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .visit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), #d96a1a);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    
+    .visit-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(244, 123, 37, 0.15);
+      transform: translateY(-4px);
+    }
+    
+    .visit-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .visit-card h5 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    
+    .visit-card .badge {
+      font-size: 0.85rem;
+      padding: 6px 12px;
+    }
+    
+    .visit-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .visit-info p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .visit-info strong {
+      color: #1f2937;
+      min-width: 100px;
+    }
+    
+    .btn-action {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), #d96a1a);
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(244, 123, 37, 0.2);
+    }
+    
+    .btn-action.completed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .btn-action.completed:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .badge-completed {
+      background: #10b981;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    
+    .visit-card.marked {
+      border-color: #10b981;
+      opacity: 0.8;
+    }
+    
+    .visit-card.marked .visit-info {
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 768px) {
+      .topbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+      
+      .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .visit-cards {
+        padding: 15px;
+        grid-template-columns: 1fr;
+      }
+      
+      .progress-section {
+        margin: 15px;
+        padding: 20px;
+      }
+    }
+  </style>
+  <title>Inicio - Repartidor</title>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1><i class="bi bi-shop"></i> Tienda UCQ</h1>
+      <small>Panel de Repartidor</small>
+    </div>
+    <div class="topbar-right">
+      <div class="user-info">
+        <i class="bi bi-person-circle"></i>
+        <span id="user-badge" class="badge bg-warning">Repartidor</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i class="bi bi-box-arrow-right"></i> Salir
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-fluid">
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <h3><i class="bi bi-graph-up"></i> Progreso del Día</h3>
+      <div class="progress-stats">
+        <div class="stat-item">
+          <strong id="completed">0</strong>
+          <p>Completadas</p>
+        </div>
+        <div class="stat-item">
+          <strong id="total">4</strong>
+          <p>Total de visitas</p>
+        </div>
+        <div class="stat-item">
+          <strong id="remaining">4</strong>
+          <p>Pendientes</p>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" id="progress-bar" style="width: 0%">0%</div>
+      </div>
+    </div>
+
+    <!-- Visit Cards -->
+    <div class="visit-cards">
+      <div class="visit-card" id="card-0">
+        <h5><i class="bi bi-shop"></i> Tienda Centro</h5>
+        <div class="visit-info">
+          <p><strong>Dirección:</strong> Paseo de la Reforma 505, CDMX</p>
+          <p><strong>Contacto:</strong> 555-0100</p>
+          <p><strong>Pedidos:</strong> <span class="badge bg-warning">2</span></p>
+        </div>
+        <button class="btn-action" id="btn-0" onclick="markCompleted(0)"><i class="bi bi-check-circle"></i> Marcar Completada</button>
+      </div>
+
+      <div class="visit-card" id="card-1">
+        <h5><i class="bi bi-shop"></i> Tienda Polanco</h5>
+        <div class="visit-info">
+          <p><strong>Dirección:</strong> Avenida Paseo de la Reforma 222, CDMX</p>
+          <p><strong>Contacto:</strong> 555-0101</p>
+          <p><strong>Pedidos:</strong> <span class="badge bg-warning">3</span></p>
+        </div>
+        <button class="btn-action" id="btn-1" onclick="markCompleted(1)"><i class="bi bi-check-circle"></i> Marcar Completada</button>
+      </div>
+
+      <div class="visit-card" id="card-2">
+        <h5><i class="bi bi-shop"></i> Tienda Guadalajara</h5>
+        <div class="visit-info">
+          <p><strong>Dirección:</strong> Avenida México 2500, Guadalajara</p>
+          <p><strong>Contacto:</strong> 333-0100</p>
+          <p><strong>Pedidos:</strong> <span class="badge bg-warning">1</span></p>
+        </div>
+        <button class="btn-action" id="btn-2" onclick="markCompleted(2)"><i class="bi bi-check-circle"></i> Marcar Completada</button>
+      </div>
+
+      <div class="visit-card" id="card-3">
+        <h5><i class="bi bi-shop"></i> Tienda Norte</h5>
+        <div class="visit-info">
+          <p><strong>Dirección:</strong> Calle 100 #50-25, Guadalajara</p>
+          <p><strong>Contacto:</strong> 333-0102</p>
+          <p><strong>Pedidos:</strong> <span class="badge bg-warning">2</span></p>
+        </div>
+        <button class="btn-action" id="btn-3" onclick="markCompleted(3)"><i class="bi bi-check-circle"></i> Marcar Completada</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let completedVisits = [false, false, false, false];
+    const totalVisits = 4;
+
+    function checkAuth() {
+      const role = localStorage.getItem('user_role');
+      if (role !== 'repartidor') {
+        window.location.href = '/front/login.html';
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/front/login.html';
+    }
+
+    function markCompleted(index) {
+      completedVisits[index] = !completedVisits[index];
+      updateProgress();
+      updateUI(index);
+    }
+
+    function updateProgress() {
+      const completed = completedVisits.filter(v => v).length;
+      const percentage = Math.round((completed / totalVisits) * 100);
+      
+      document.getElementById('completed').textContent = completed;
+      document.getElementById('remaining').textContent = totalVisits - completed;
+      
+      const progressBar = document.getElementById('progress-bar');
+      progressBar.style.width = percentage + '%';
+      progressBar.textContent = percentage + '%';
+      
+      localStorage.setItem('completedVisits', JSON.stringify(completedVisits));
+    }
+
+    function updateUI(index) {
+      const card = document.getElementById(`card-${index}`);
+      const btn = document.getElementById(`btn-${index}`);
+      
+      if (completedVisits[index]) {
+        card.classList.add('marked');
+        btn.classList.add('completed');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-check-circle"></i> Completada';
+      } else {
+        card.classList.remove('marked');
+        btn.classList.remove('completed');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-check-circle"></i> Marcar Completada';
+      }
+    }
+
+    function loadProgress() {
+      const saved = localStorage.getItem('completedVisits');
+      if (saved) {
+        completedVisits = JSON.parse(saved);
+        completedVisits.forEach((_, index) => {
+          updateUI(index);
+        });
+      }
+      updateProgress();
+    }
+
+    checkAuth();
+    loadProgress();
+  </script>
+</body>
+</html>

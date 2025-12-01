@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/front/manifest.json">
+  <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/assets/css/styles.css">
+  <style>
+    :root { --primary: #2563eb; }
+    
+    body {
+      background: #f8f9fa;
+      font-family: 'Work Sans', 'Segoe UI', sans-serif;
+    }
+    
+    .sidebar {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      padding-top: 0;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .sidebar-header { 
+      padding: 25px 20px; 
+      border-bottom: 2px solid rgba(255,255,255,0.15); 
+      display: flex; 
+      align-items: center; 
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-header h4 { 
+      margin: 0; 
+      font-size: 1.3rem; 
+      font-weight: 700;
+    }
+    
+    .sidebar-menu { 
+      padding: 25px 0; 
+    }
+    
+    .sidebar-menu a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-left-color: white;
+      padding-left: 25px;
+    }
+    
+    .sidebar-menu a i {
+      width: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .main-content { 
+      margin-left: 250px; 
+      padding-top: 0;
+      transition: all 0.3s;
+    }
+    
+    .topbar {
+      background: white;
+      padding: 20px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+    }
+    
+    .topbar h2 {
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .topbar .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .topbar .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+      border: none;
+      font-weight: 700;
+      padding: 20px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1e40af, var(--primary));
+      transform: translateY(-2px);
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(37, 99, 235, 0.05);
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      color: white;
+    }
+    
+    .modal-header .btn-close {
+      filter: invert(1) brightness(2);
+    }
+    
+    .container-fluid {
+      padding: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar-header h4 { display: none; }
+      .sidebar-menu a span { display: none; }
+      .main-content { margin-left: 60px; }
+    }
+  </style>
+  <title>Gestión de Productos</title>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <i class="bi bi-truck" style="font-size: 1.5rem;"></i>
+      <h4>Tienda UCQ</h4>
+    </div>
+    <div class="sidebar-menu">
+      <a href="/front/pages/admin/dashboard.html">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/front/pages/admin/pedidos.html">
+        <i class="bi bi-box-seam"></i>
+        <span>Pedidos</span>
+      </a>
+      <a href="/front/pages/admin/productos.html" class="active">
+        <i class="bi bi-box"></i>
+        <span>Productos</span>
+      </a>
+      <a href="/front/pages/admin/tiendas.html">
+        <i class="bi bi-shop"></i>
+        <span>Tiendas</span>
+      </a>
+      <a href="/front/pages/admin/repartidores.html">
+        <i class="bi bi-person-badge"></i>
+        <span>Repartidores</span>
+      </a>
+      <a href="/front/pages/admin/notificaciones.html">
+        <i class="bi bi-bell"></i>
+        <span>Notificaciones</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <h2 class="mb-0"><i class="bi bi-box"></i> Gestión de Productos</h2>
+      <div>
+        <span class="badge bg-info me-3" id="user-badge">Admin</span>
+        <button class="btn btn-sm btn-outline-danger" onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid py-4">
+      <div class="row my-3">
+        <div class="col-md-3"><input type="text" class="form-control" placeholder="Buscar producto..."></div>
+        <div class="col-md-3"><input type="number" class="form-control" placeholder="Precio min..."></div>
+        <div class="col-md-3"><input type="number" class="form-control" placeholder="Precio máx..."></div>
+        <div class="col-md-3"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#newProductoModal"><i class="bi bi-plus-circle"></i> Nuevo Producto</button></div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>ID</th><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>#1</td><td>Producto A</td><td>SKU001</td><td>$50.00</td><td><span class="badge bg-success">100</span></td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleProductoModal" onclick="verDetalleProducto('1', 'Producto A', 'SKU001', '$50.00', '100')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarProducto('1')">Eliminar</button></td></tr>
+              <tr><td>#2</td><td>Producto B</td><td>SKU002</td><td>$75.00</td><td><span class="badge bg-warning">25</span></td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleProductoModal" onclick="verDetalleProducto('2', 'Producto B', 'SKU002', '$75.00', '25')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarProducto('2')">Eliminar</button></td></tr>
+              <tr><td>#3</td><td>Producto C</td><td>SKU003</td><td>$120.00</td><td><span class="badge bg-danger">5</span></td><td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleProductoModal" onclick="verDetalleProducto('3', 'Producto C', 'SKU003', '$120.00', '5')">Ver</button> <button class="btn btn-sm btn-danger" onclick="eliminarProducto('3')">Eliminar</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nuevo Producto -->
+  <div class="modal fade" id="newProductoModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newProductoForm">
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">SKU</label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Precio</label>
+              <input type="number" class="form-control" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Stock</label>
+              <input type="number" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Crear Producto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ver Detalle Producto -->
+  <div class="modal fade" id="detalleProductoModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles del Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <strong>ID:</strong>
+            <p id="detalle-producto-id" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Nombre:</strong>
+            <p id="detalle-producto-nombre" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>SKU:</strong>
+            <p id="detalle-producto-sku" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Precio:</strong>
+            <p id="detalle-producto-precio" class="mb-0"></p>
+          </div>
+          <div class="mb-3">
+            <strong>Stock:</strong>
+            <p id="detalle-producto-stock" class="mb-0"></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function checkAuth() { if (localStorage.getItem('user_role') !== 'admin') window.location.href = '/front/login.html'; }
+    function logout() { localStorage.clear(); window.location.href = '/front/login.html'; }
+
+    function verDetalleProducto(id, nombre, sku, precio, stock) {
+      document.getElementById('detalle-producto-id').textContent = id;
+      document.getElementById('detalle-producto-nombre').textContent = nombre;
+      document.getElementById('detalle-producto-sku').textContent = sku;
+      document.getElementById('detalle-producto-precio').textContent = precio;
+      document.getElementById('detalle-producto-stock').textContent = stock;
+    }
+
+    function eliminarProducto(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+        alert('Producto eliminado correctamente');
+        location.reload();
+      }
+    }
+
+    document.getElementById('newProductoForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Producto creado correctamente');
+      bootstrap.Modal.getInstance(document.getElementById('newProductoModal')).hide();
+      this.reset();
+    });
+
+    checkAuth();
+  </script>
+</body>
+</html>
