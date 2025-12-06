@@ -1,5 +1,6 @@
 package mx.edu.utez.back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,8 +14,15 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer quantity;
+    private Double price; // Precio en el momento de la compra
+
     @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer quantity;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonIgnoreProperties("items") // Evita ciclos infinitos
+    private Order order;
 }

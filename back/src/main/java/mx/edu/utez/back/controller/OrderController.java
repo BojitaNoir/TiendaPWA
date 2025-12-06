@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class OrderController {
     private final OrderService orderService;
 
@@ -16,13 +17,38 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
-    public ResponseEntity<Order> create(@RequestBody Order o) {
-        return ResponseEntity.ok(orderService.create(o));
+    @GetMapping
+    public ResponseEntity<List<Order>> list() {
+        return ResponseEntity.ok(orderService.findAll());
     }
 
-    @GetMapping("/by-repartidor/{id}")
-    public ResponseEntity<List<Order>> byRepartidor(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.findByRepartidor(id));
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Order order) {
+        try {
+            // El servicio se encarga de:
+            // 1. Buscar los productos reales en la BD
+            // 2. Calcular el precio total
+            // 3. Restar el stock
+            Order createdOrder = orderService.create(order);
+            return ResponseEntity.ok(createdOrder);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error al crear pedido: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Order order) {
+        try {
+            return ResponseEntity.ok(orderService.update(id, order));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        orderService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

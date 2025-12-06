@@ -1,3 +1,15 @@
+// Fix aria-hidden issue with modals - executed immediately when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('show.bs.modal', function() {
+      this.removeAttribute('aria-hidden');
+    });
+    modal.addEventListener('hide.bs.modal', function() {
+      setTimeout(() => this.setAttribute('aria-hidden', 'true'), 150);
+    });
+  });
+});
+
 // Registrar el Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

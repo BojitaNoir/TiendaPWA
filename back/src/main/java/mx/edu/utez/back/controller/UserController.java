@@ -30,4 +30,11 @@ public class UserController {
     public ResponseEntity<User> assignStore(@PathVariable Long userId, @PathVariable Long storeId) {
         return ResponseEntity.ok(userService.assignStore(userId, storeId));
     }
+
+    // 🆕 NUEVO: Método para eliminar un usuario
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

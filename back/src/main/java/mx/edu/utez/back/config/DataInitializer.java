@@ -5,53 +5,47 @@ import mx.edu.utez.back.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner init(UserRepository userRepo, StoreRepository storeRepo, ProductRepository productRepo) {
+    CommandLineRunner init(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         return args -> {
+            // Solo se ejecuta si no hay usuarios en la base de datos
             if (userRepo.count() == 0) {
+                System.out.println("--- INICIANDO CARGA DE USUARIOS BASE ---");
+
+                // 1. ADMIN
                 User admin = new User();
-                admin.setName("Admin");
+                admin.setName("Admin Principal");
                 admin.setEmail("admin@example.com");
-                admin.setPassword("admin");
+                admin.setPassword(passwordEncoder.encode("admin123")); // Contraseña segura
                 admin.setRole(Role.ADMIN);
                 userRepo.save(admin);
 
+                // 2. REPARTIDOR 1
                 User repartidor = new User();
-                repartidor.setName("Repartidor 1");
+                repartidor.setName("Repartidor Centro");
                 repartidor.setEmail("rep1@example.com");
-                repartidor.setPassword("rep");
+                repartidor.setPassword(passwordEncoder.encode("rep123")); // Contraseña segura
                 repartidor.setRole(Role.REPARTIDOR);
                 userRepo.save(repartidor);
 
-                Store s1 = new Store();
-                s1.setName("Tienda A");
-                s1.setCode("TIENDA-A-QR");
-                s1.setLatitude(19.432608);
-                s1.setLongitude(-99.133209);
-                storeRepo.save(s1);
+                // 3. REPARTIDOR 2
+                User repartidor2 = new User();
+                repartidor2.setName("Repartidor Polanco");
+                repartidor2.setEmail("rep2@example.com");
+                repartidor2.setPassword(passwordEncoder.encode("rep123")); // Contraseña segura
+                repartidor2.setRole(Role.REPARTIDOR);
+                userRepo.save(repartidor2);
 
-                Store s2 = new Store();
-                s2.setName("Tienda B");
-                s2.setCode("TIENDA-B-QR");
-                s2.setLatitude(19.427);
-                s2.setLongitude(-99.167);
-                storeRepo.save(s2);
-
-                Product p1 = new Product();
-                p1.setName("Refresco 600ml");
-                p1.setSku("REF600");
-                p1.setPrice(12.5);
-                productRepo.save(p1);
-
-                Product p2 = new Product();
-                p2.setName("Pan bolillo");
-                p2.setSku("PAN-BOL");
-                p2.setPrice(3.0);
-                productRepo.save(p2);
+                System.out.println("--- USUARIOS CREADOS EXITOSAMENTE ---");
+                System.out.println("Admin: admin@example.com / admin123");
+                System.out.println("Repartidor: rep1@example.com / rep123");
+            } else {
+                System.out.println("--- Usuarios ya existen en BD, omitiendo carga inicial ---");
             }
         };
     }

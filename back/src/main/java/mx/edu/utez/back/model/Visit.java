@@ -2,8 +2,7 @@ package mx.edu.utez.back.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "visits")
@@ -15,18 +14,26 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Store store;
+    private LocalDateTime checkInTime;
 
-    @ManyToOne
-    private User repartidor;
-
-    private Instant timestamp = Instant.now();
-
+    // Coordenadas GPS del check-in
     private Double latitude;
     private Double longitude;
 
-    private Boolean hadOrder = false;
+    // ✅ ESTOS CAMPOS FALTABAN
+    private boolean hadOrder; // ¿Tenía pedido asignado?
+    private boolean temporaryAssignment; // ¿Fue una asignación temporal?
 
-    private Boolean temporary = false;
+    @ManyToOne
+    @JoinColumn(name = "repartidor_id")
+    private User repartidor;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    @PrePersist
+    protected void onCreate() {
+        checkInTime = LocalDateTime.now();
+    }
 }

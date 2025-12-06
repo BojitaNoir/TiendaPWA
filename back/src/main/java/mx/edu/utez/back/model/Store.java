@@ -18,6 +18,11 @@ public class Store {
     @Column(unique = true)
     private String code; // QR or barcode value
 
+    // ✅ Campos nuevos necesarios
+    private String city;
+    private String address;
+    private String phone;
+
     private Double latitude;
     private Double longitude;
 }

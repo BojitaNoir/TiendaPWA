@@ -1,9 +1,9 @@
 package mx.edu.utez.back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,16 +17,28 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ ESTOS SON LOS CAMPOS QUE FALTABAN Y CAUSABAN EL ERROR ROJO
+    private String clientName;
+    private Double totalPrice;
+    private String status; // PENDIENTE, EN_PROCESO, COMPLETADO
+    private LocalDateTime createdAt;
+
     @ManyToOne
+    @JoinColumn(name = "store_id")
     private Store store;
 
     @ManyToOne
+    @JoinColumn(name = "repartidor_id")
     private User repartidor;
 
-    private Instant createdAt = Instant.now();
-
-    private String status = "CREATED";
-
-    @OneToMany(cascade = CascadeType.ALL)
+    // Relación con los productos
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("order")
     private List<OrderItem> items = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        if (status == null) status = "PENDIENTE";
+    }
 }

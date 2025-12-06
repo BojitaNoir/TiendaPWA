@@ -35,4 +35,11 @@ public class StoreController {
     public ResponseEntity<Store> byCode(@PathVariable String code) {
         return ResponseEntity.ok(storeService.findByCode(code));
     }
+
+    // 🆕 NUEVO: Método para eliminar una tienda
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        storeService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

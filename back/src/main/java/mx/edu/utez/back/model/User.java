@@ -26,9 +26,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // 🚩 CAMPO AÑADIDO PARA LA ASIGNACIÓN PRINCIPAL (soluciona 'setStore')
+    // Esto modela que un repartidor tiene una "Base" o Tienda principal
+    @ManyToOne(fetch = FetchType.LAZY) // Usamos LAZY para no cargarla siempre
+    @JoinColumn(name = "main_store_id")
+    private Store store;
+
+
     @ManyToMany
     @JoinTable(name = "user_store",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "store_id"))
     private Set<Store> assignedStores = new HashSet<>();
+
+    // Nota: Si usas @Data de Lombok, los getters y setters (getStore/setStore)
+    // se generan automáticamente. ¡El error desaparecerá al guardar!
 }

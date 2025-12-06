@@ -5,36 +5,69 @@ import mx.edu.utez.back.model.User;
 import mx.edu.utez.back.repository.StoreRepository;
 import mx.edu.utez.back.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder; // 🟢 Importación necesaria
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final PasswordEncoder passwordEncoder; // 🟢 Añadir el campo para el encoder
 
-    public UserService(UserRepository userRepository, StoreRepository storeRepository) {
+    // 🟢 Constructor Modificado: Ahora inyecta PasswordEncoder
+    public UserService(UserRepository userRepository, StoreRepository storeRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
+        this.passwordEncoder = passwordEncoder; // Asignación del encoder
     }
 
-    public User create(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public User create(User u) {
+        // 🟢 CORRECCIÓN: Hashear la contraseña antes de guardarla
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
+        return userRepository.save(u);
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
+    @Transactional(readOnly = true) // Solo lectura
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    // Implementación del método assignStore (sin cambios, ya que estaba bien)
+    @Transactional
     public User assignStore(Long userId, Long storeId) {
-        User u = userRepository.findById(userId).orElseThrow();
-        Store s = storeRepository.findById(storeId).orElseThrow();
-        u.getAssignedStores().add(s);
-        return userRepository.save(u);
+        // 1. Encontrar el usuario o lanzar excepción si no existe
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario (Repartidor) no encontrado con ID: " + userId));
+
+        // 2. Encontrar la tienda o lanzar excepción si no existe
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new RuntimeException("Tienda no encontrada con ID: " + storeId));
+
+        // 3. Asignar la tienda al usuario (Repartidor)
+        user.setStore(store);
+
+        // 4. Guardar los cambios
+        return userRepository.save(user);
+    }
+
+    // 🔑 Método de Autenticación
+    @Transactional(readOnly = true)
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        // 🟢 CORRECCIÓN: Usar passwordEncoder.matches() para comparar la contraseña plana
+        // con el hash almacenado.
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
     }
 }

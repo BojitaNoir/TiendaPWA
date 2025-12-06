@@ -6,237 +6,19 @@
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="/front/manifest.json">
   <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
+  
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/front/assets/css/styles.css">
-  <link rel="stylesheet" href="/front/assets/css/responsive.css">
-  
-  <style>
-    :root {
-      --primary: #2563eb;
-      --secondary: #f47b25;
-      --success: #10b981;
-      --warning: #f59e0b;
-    }
-    
-    body {
-      background: #f8f9fa;
-      font-family: 'Work Sans', 'Segoe UI', sans-serif;
-    }
-    
-    .sidebar {
-      background: linear-gradient(135deg, var(--primary), #1e40af);
-      color: white;
-      min-height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      padding-top: 0;
-      overflow-y: auto;
-      z-index: 100;
-      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .sidebar-header {
-      padding: 25px 20px;
-      border-bottom: 2px solid rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    
-    .sidebar-header h4 {
-      margin: 0;
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-    
-    .sidebar-menu {
-      padding: 25px 0;
-    }
-    
-    .sidebar-menu a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px 20px;
-      border-left: 4px solid transparent;
-      transition: all 0.3s ease;
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .sidebar-menu a:hover,
-    .sidebar-menu a.active {
-      background: rgba(255,255,255,0.15);
-      color: white;
-      border-left-color: white;
-      padding-left: 25px;
-    }
-    
-    .sidebar-menu a i {
-      width: 20px;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-    
-    .main-content {
-      margin-left: 250px;
-      padding-top: 0;
-      transition: all 0.3s;
-    }
-    
-    .topbar {
-      background: white;
-      padding: 20px 30px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 2px solid rgba(37, 99, 235, 0.1);
-    }
-    
-    .topbar h2 {
-      color: var(--primary);
-      font-weight: 700;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .topbar .logout-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .topbar .logout-btn:hover {
-      background: #dc2626;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-    
-    .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border: 2px solid transparent;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), #1e40af);
-    }
-    
-    .stat-card:hover {
-      border-color: var(--primary);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
-      transform: translateY(-4px);
-    }
-    
-    .stat-card h3 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin: 15px 0 10px;
-    }
-    
-    .stat-card p {
-      color: #6b7280;
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .stat-card i {
-      font-size: 2rem;
-      color: var(--primary);
-      opacity: 0.2;
-    }
-    
-    .container-fluid {
-      padding: 30px;
-    }
-    
-    .card {
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    
-    .card-header {
-      background: linear-gradient(135deg, var(--primary), #1e40af);
-      color: white;
-      border: none;
-      font-weight: 700;
-      padding: 20px;
-    }
-    
-    .table {
-      margin-bottom: 0;
-    }
-    
-    .table-hover tbody tr:hover {
-      background-color: rgba(37, 99, 235, 0.05);
-    }
-    
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 60px;
-        padding-top: 10px;
-      }
-      
-      .sidebar-header h4 {
-        display: none;
-      }
-      
-      .sidebar-menu a span {
-        display: none;
-      }
-      
-      .main-content {
-        margin-left: 60px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/front/css/admin.css">
   
   <title>Dashboard Admin</title>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <i class="bi bi-shop" style="font-size: 1.5rem;"></i>
+      <i class="bi bi-truck" style="font-size: 1.5rem;"></i>
       <h4>Tienda UCQ</h4>
     </div>
-    
     <div class="sidebar-menu">
       <a href="/front/pages/admin/dashboard.html" class="active">
         <i class="bi bi-speedometer2"></i>
@@ -265,9 +47,7 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content">
-    <!-- Top Bar -->
     <div class="topbar">
       <h2 class="mb-0"><i class="bi bi-speedometer2"></i> Dashboard</h2>
       <div>
@@ -278,48 +58,48 @@
       </div>
     </div>
 
-    <!-- Content -->
     <div class="container-fluid p-4">
+      
       <div class="row mb-4">
         <div class="col-md-3">
-          <div class="stat-card">
-            <i class="bi bi-box-seam" style="font-size: 2rem; color: #2563eb;"></i>
-            <h3>156</h3>
-            <p>Pedidos Hoy</p>
+          <div class="stat-card bg-white p-3 rounded shadow-sm border-start border-4 border-primary">
+            <i class="bi bi-box-seam text-primary mb-2" style="font-size: 2rem;"></i>
+            <h3 class="fw-bold" id="stat-total">...</h3>
+            <p class="text-muted mb-0">Pedidos Totales</p>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="stat-card" style="border-left-color: #10b981;">
-            <i class="bi bi-check-circle" style="font-size: 2rem; color: #10b981;"></i>
-            <h3>89</h3>
-            <p>Completados</p>
+          <div class="stat-card bg-white p-3 rounded shadow-sm border-start border-4 border-success">
+            <i class="bi bi-check-circle text-success mb-2" style="font-size: 2rem;"></i>
+            <h3 class="fw-bold" id="stat-completados">...</h3>
+            <p class="text-muted mb-0">Completados</p>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="stat-card" style="border-left-color: #f59e0b;">
-            <i class="bi bi-hourglass" style="font-size: 2rem; color: #f59e0b;"></i>
-            <h3>42</h3>
-            <p>En Proceso</p>
+          <div class="stat-card bg-white p-3 rounded shadow-sm border-start border-4 border-warning">
+            <i class="bi bi-hourglass-split text-warning mb-2" style="font-size: 2rem;"></i>
+            <h3 class="fw-bold" id="stat-proceso">...</h3>
+            <p class="text-muted mb-0">En Proceso</p>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="stat-card" style="border-left-color: #ef4444;">
-            <i class="bi bi-exclamation-circle" style="font-size: 2rem; color: #ef4444;"></i>
-            <h3>25</h3>
-            <p>Pendientes</p>
+          <div class="stat-card bg-white p-3 rounded shadow-sm border-start border-4 border-danger">
+            <i class="bi bi-exclamation-circle text-danger mb-2" style="font-size: 2rem;"></i>
+            <h3 class="fw-bold" id="stat-pendientes">...</h3>
+            <p class="text-muted mb-0">Pendientes</p>
           </div>
         </div>
       </div>
 
-      <!-- Tables Section -->
       <div class="row">
         <div class="col-lg-6 mb-4">
-          <div class="card shadow-sm">
-            <div class="card-header bg-light">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
               <h5 class="mb-0">Últimos Pedidos</h5>
+              <a href="/front/pages/admin/pedidos.html" class="btn btn-sm btn-outline-primary">Ver todos</a>
             </div>
             <div class="table-responsive">
-              <table class="table table-hover mb-0">
+              <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                   <tr>
                     <th>ID</th>
@@ -328,25 +108,8 @@
                     <th>Estado</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>#P001</td>
-                    <td>Juan García</td>
-                    <td>$150.00</td>
-                    <td><span class="badge bg-warning">En proceso</span></td>
-                  </tr>
-                  <tr>
-                    <td>#P002</td>
-                    <td>María López</td>
-                    <td>$220.00</td>
-                    <td><span class="badge bg-success">Completado</span></td>
-                  </tr>
-                  <tr>
-                    <td>#P003</td>
-                    <td>Carlos Rodríguez</td>
-                    <td>$85.50</td>
-                    <td><span class="badge bg-secondary">Pendiente</span></td>
-                  </tr>
+                <tbody id="dashboard-orders-body">
+                  <tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Cargando...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -354,35 +117,22 @@
         </div>
 
         <div class="col-lg-6 mb-4">
-          <div class="card shadow-sm">
-            <div class="card-header bg-light">
-              <h5 class="mb-0">Repartidores Activos</h5>
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Repartidores Recientes</h5>
+              <a href="/front/pages/admin/repartidores.html" class="btn btn-sm btn-outline-primary">Gestionar</a>
             </div>
             <div class="table-responsive">
-              <table class="table table-hover mb-0">
+              <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                   <tr>
                     <th>Nombre</th>
-                    <th>Entregas</th>
-                    <th>Estado</th>
+                    <th>Email</th>
+                    <th>Rol</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Pedro García</td>
-                    <td>12</td>
-                    <td><span class="badge bg-success">En trabajo</span></td>
-                  </tr>
-                  <tr>
-                    <td>Ana Martínez</td>
-                    <td>8</td>
-                    <td><span class="badge bg-success">En trabajo</span></td>
-                  </tr>
-                  <tr>
-                    <td>Luis Rodríguez</td>
-                    <td>5</td>
-                    <td><span class="badge bg-info">Disponible</span></td>
-                  </tr>
+                <tbody id="dashboard-repartidores-body">
+                  <tr><td colspan="3" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Cargando...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -393,26 +143,113 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/front/js/api.js"></script>
   <script src="/front/js/app.js"></script>
   <script src="/front/js/offline.js"></script>
 
   <script>
-    function checkAuth() {
-      const role = localStorage.getItem('user_role');
-      if (role !== 'admin') {
-        window.location.href = '/front/login.html';
-        return;
+    function checkAuth() { 
+      if (localStorage.getItem('user_role') !== 'admin' && localStorage.getItem('user_role') !== 'ADMIN') {
+        window.location.href = '/front/login.html'; 
       }
-      document.getElementById('user-badge').textContent = role?.toUpperCase() || 'USER';
+      document.getElementById('user-badge').textContent = localStorage.getItem('user_name') || 'Admin';
+    }
+    
+    function logout() { localStorage.clear(); window.location.href = '/front/login.html'; }
+
+    // Helpers
+    function getStatusBadge(status) {
+        let color = 'secondary';
+        if (status === 'COMPLETADO' || status === 'DELIVERED') color = 'success';
+        if (status === 'EN_PROCESO' || status === 'SENT') color = 'warning';
+        if (status === 'PENDIENTE' || status === 'CREATED') color = 'danger';
+        return `<span class="badge bg-${color} rounded-pill">${status}</span>`;
     }
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = '/front/login.html';
+    async function loadDashboardData() {
+        // 1. Cargar Pedidos y Calcular Estadísticas
+        try {
+            const orders = await OrderAPI.list();
+            
+            // Contadores
+            const total = orders.length;
+            const completados = orders.filter(o => o.status === 'COMPLETADO' || o.status === 'DELIVERED').length;
+            const proceso = orders.filter(o => o.status === 'EN_PROCESO' || o.status === 'SENT').length;
+            const pendientes = orders.filter(o => o.status === 'PENDIENTE' || o.status === 'CREATED').length;
+
+            // Actualizar DOM Stats
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-completados').textContent = completados;
+            document.getElementById('stat-proceso').textContent = proceso;
+            document.getElementById('stat-pendientes').textContent = pendientes;
+
+            // Tabla Últimos Pedidos (Top 5 más recientes)
+            // Asumimos que vienen en orden o invertimos si es necesario. 
+            // Si la API no ordena, podemos hacer .reverse() o ordenar por ID.
+            const recentOrders = orders.slice(-5).reverse(); 
+            const ordersBody = document.getElementById('dashboard-orders-body');
+            ordersBody.innerHTML = '';
+
+            if (recentOrders.length === 0) {
+                ordersBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Sin pedidos recientes</td></tr>';
+            } else {
+                recentOrders.forEach(order => {
+                    const row = `
+                        <tr>
+                            <td class="fw-bold">#${order.id}</td>
+                            <td>${order.clientName || 'Cliente'}</td>
+                            <td>$${(order.totalPrice || 0).toFixed(2)}</td>
+                            <td>${getStatusBadge(order.status)}</td>
+                        </tr>
+                    `;
+                    ordersBody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+        } catch (error) {
+            console.error("Error loading orders:", error);
+            document.getElementById('dashboard-orders-body').innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error cargando pedidos</td></tr>';
+        }
+
+        // 2. Cargar Repartidores
+        try {
+            const users = await UserAPI.list();
+            const repartidores = users.filter(u => u.role === 'REPARTIDOR').slice(0, 5); // Solo los primeros 5
+            
+            const repBody = document.getElementById('dashboard-repartidores-body');
+            repBody.innerHTML = '';
+
+            if (repartidores.length === 0) {
+                repBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">No hay repartidores</td></tr>';
+            } else {
+                repartidores.forEach(rep => {
+                    const row = `
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle p-1 me-2"><i class="bi bi-person"></i></div>
+                                    ${rep.name}
+                                </div>
+                            </td>
+                            <td class="text-muted small">${rep.email}</td>
+                            <td><span class="badge bg-info bg-opacity-10 text-info border border-info">Repartidor</span></td>
+                        </tr>
+                    `;
+                    repBody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+        } catch (error) {
+            console.error("Error loading users:", error);
+            document.getElementById('dashboard-repartidores-body').innerHTML = '<tr><td colspan="3" class="text-center text-danger">Error cargando repartidores</td></tr>';
+        }
     }
 
-    // Check auth on page load
-    checkAuth();
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      loadDashboardData();
+    });
   </script>
 </body>
 </html>
