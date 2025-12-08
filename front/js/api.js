@@ -1,11 +1,6 @@
 // Configuración de API
 // Detectar la URL del API automáticamente
-const API_BASE_URL = (() => {
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-    // Backend siempre en puerto 8081 (ajusta si usas otro)
-    return `${protocol}//${hostname}:8081/api`;
-})();
+const API_BASE_URL = "http://app-tiendaucq-env.eba-w3s5zsy2.us-east-1.elasticbeanstalk.com/api";
 
 // Función genérica para hacer peticiones
 async function apiCall(endpoint, options = {}) {
