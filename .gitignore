@@ -1,0 +1,96 @@
+# Git Ignore for TiendaPWA
+
+# Maven
+target/
+.m2/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+.classpath
+.project
+.settings/
+
+# Java
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.env.local
+
+# Frontend
+.cache/
+.parcel-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE specific
+*.sublime-project
+*.sublime-workspace
+
+# Local files
+*.tmp
+temp/
+cache/
+
+# Frontend dist
+dist/
+build/
+
+# Backend compiled
+back/target/
+front/dist/

@@ -1,0 +1,16 @@
+{
+  "name": "tienda-pwa",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de pedidos, tiendas y entregas - PWA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["pwa", "tienda", "pedidos", "entregas"],
+  "author": "",
+  "license": "MIT"
+}
