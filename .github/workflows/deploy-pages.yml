@@ -1,20 +1,16 @@
-name: Deploy Frontend to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Cambia a 'master' si tu rama principal se llama así
-    paths:
-      - 'front/**'  # Solo se ejecuta cuando hay cambios en /front
-  workflow_dispatch:  # Permite ejecutar manualmente desde GitHub
+      - main
+  workflow_dispatch:
 
-# Permisos necesarios para desplegar a GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Evita que se ejecuten múltiples despliegues simultáneos
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -36,8 +32,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Solo sube el contenido de la carpeta 'front'
-          path: 'front'
+          # Sube todo el repositorio manteniendo la estructura
+          path: '.'
       
       - name: Deploy to GitHub Pages
         id: deployment

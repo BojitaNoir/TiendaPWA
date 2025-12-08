@@ -9,6 +9,18 @@
   <meta name="theme-color" content="#2563eb">
   <meta name="color-scheme" content="light dark">
 
+  <!-- Base path configuration -->
+  <script>
+    // Detectar si estamos en GitHub Pages o desarrollo local
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const basePath = isGitHubPages ? '/TiendaPWA' : '/front';
+
+    // Crear y agregar el tag base
+    const baseTag = document.createElement('base');
+    baseTag.href = basePath + '/';
+    document.head.appendChild(baseTag);
+  </script>
+
   <!-- Apple Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
