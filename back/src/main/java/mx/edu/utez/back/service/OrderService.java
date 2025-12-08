@@ -31,7 +31,46 @@ public class OrderService {
 
     public List<Order> findAll() {
         try {
-            return orderRepo.findAll();
+            List<Order> orders = orderRepo.findAll();
+
+            // Populate related objects for each order
+            for (Order order : orders) {
+                // Populate Store
+                if (order.getStoreId() != null) {
+                    try {
+                        Store store = storeRepo.findById(order.getStoreId());
+                        order.setStore(store);
+                    } catch (Exception e) {
+                        // Store not found, leave null
+                    }
+                }
+
+                // Populate Repartidor
+                if (order.getRepartidorId() != null) {
+                    try {
+                        User repartidor = userRepo.findById(order.getRepartidorId());
+                        order.setRepartidor(repartidor);
+                    } catch (Exception e) {
+                        // User not found, leave null
+                    }
+                }
+
+                // Populate Products in OrderItems
+                if (order.getItems() != null) {
+                    for (OrderItem item : order.getItems()) {
+                        if (item.getProductId() != null) {
+                            try {
+                                Product product = productRepo.findById(item.getProductId());
+                                item.setProduct(product);
+                            } catch (Exception e) {
+                                // Product not found, leave null
+                            }
+                        }
+                    }
+                }
+            }
+
+            return orders;
         } catch (Exception e) {
             throw new RuntimeException("Error finding orders", e);
         }

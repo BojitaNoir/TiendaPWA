@@ -43,8 +43,14 @@ public abstract class AbstractFirestoreRepository<T> {
         DocumentSnapshot document = future.get();
         if (document.exists()) {
             T object = document.toObject(classType);
-            // We assume T has a setId method or similar if we want to inject ID back,
-            // but for now relying on POJO mapping.
+            // Set the document ID on the object
+            try {
+                java.lang.reflect.Field idField = classType.getDeclaredField("id");
+                idField.setAccessible(true);
+                idField.set(object, document.getId());
+            } catch (Exception e) {
+                // If no id field exists, just return the object as-is
+            }
             return object;
         } else {
             return null;
@@ -57,7 +63,14 @@ public abstract class AbstractFirestoreRepository<T> {
         return documents.stream()
                 .map(doc -> {
                     T obj = doc.toObject(classType);
-                    // Optionally set ID if supported
+                    // Set the document ID on the object
+                    try {
+                        java.lang.reflect.Field idField = classType.getDeclaredField("id");
+                        idField.setAccessible(true);
+                        idField.set(obj, doc.getId());
+                    } catch (Exception e) {
+                        // If no id field exists, just return the object as-is
+                    }
                     return obj;
                 })
                 .collect(Collectors.toList());

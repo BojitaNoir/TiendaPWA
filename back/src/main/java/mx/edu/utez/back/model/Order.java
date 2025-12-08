@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,13 @@ public class Order {
 
     private String storeId;
     private String repartidorId;
+
+    // Transient fields for API responses (not stored in Firestore)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private transient Store store;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private transient User repartidor;
 
     private List<OrderItem> items = new ArrayList<>();
 
