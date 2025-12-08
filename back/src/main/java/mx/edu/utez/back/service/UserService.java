@@ -1,6 +1,7 @@
 package mx.edu.utez.back.service;
 
 import mx.edu.utez.back.model.User;
+import mx.edu.utez.back.model.Store;
 import mx.edu.utez.back.repository.UserRepository;
 import mx.edu.utez.back.repository.StoreRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +38,21 @@ public class UserService {
 
     public List<User> findAll() {
         try {
-            return userRepository.findAll();
+            List<User> users = userRepository.findAll();
+
+            // Populate store for each user
+            for (User user : users) {
+                if (user.getMainStoreId() != null) {
+                    try {
+                        Store store = storeRepository.findById(user.getMainStoreId());
+                        user.setStore(store);
+                    } catch (Exception e) {
+                        // Store not found, leave null
+                    }
+                }
+            }
+
+            return users;
         } catch (Exception e) {
             throw new RuntimeException("Error finding users", e);
         }

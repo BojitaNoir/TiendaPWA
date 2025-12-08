@@ -113,9 +113,20 @@ const UserAPI = {
         return apiCall('/users');
     },
 
+    getById: async (id) => {
+        return apiCall(`/users/${id}`);
+    },
+
     create: async (user) => {
         return apiCall('/users', {
             method: 'POST',
+            body: JSON.stringify(user)
+        });
+    },
+
+    update: async (id, user) => {
+        return apiCall(`/users/${id}`, {
+            method: 'PUT',
             body: JSON.stringify(user)
         });
     },

@@ -131,6 +131,13 @@ public class OrderService {
             newOrder.setItems(itemsFinales);
             newOrder.setTotalPrice(totalCalculado);
 
+            // Clear nested objects before saving to Firestore (we only want IDs)
+            newOrder.setStore(null);
+            newOrder.setRepartidor(null);
+            for (OrderItem item : newOrder.getItems()) {
+                item.setProduct(null);
+            }
+
             // Guardar orden
             orderRepo.save(newOrder, newOrder.getId());
 

@@ -3,7 +3,6 @@ package mx.edu.utez.back.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @NoArgsConstructor
@@ -12,9 +11,10 @@ public class OrderItem {
     private String id;
     private Integer quantity;
     private Double price;
+
+    // ID for Firestore storage
     private String productId;
 
-    // Transient field for API responses (not stored in Firestore)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private transient Product product;
+    // Full object for JSON responses (Firestore will ignore if null)
+    private Product product;
 }

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="/front/manifest.json">
   <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
-  
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+    rel="stylesheet">
   <link rel="stylesheet" href="/front/css/admin.css">
-  
+
   <title>Gestión de Repartidores</title>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="sidebar-header">
@@ -60,7 +63,7 @@
 
     <div class="container-fluid p-4">
       <div id="message-container"></div>
-      
+
       <div class="card shadow-sm mb-4">
         <div class="card-body">
           <div class="row g-3 align-items-center">
@@ -124,25 +127,25 @@
         <div class="modal-body">
           <form id="newRepartidorForm">
             <div class="mb-3">
-                <label class="form-label">Nombre Completo</label>
-                <input type="text" class="form-control" id="new-nombre" required>
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="new-nombre" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="new-email" required>
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="new-email" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="new-password" required>
+              <label class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="new-password" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Asignar Tienda (Opcional)</label>
-                <select class="form-select" id="new-store-select">
-                    <option value="" selected>Sin tienda asignada</option>
-                    </select>
+              <label class="form-label">Asignar Tienda (Opcional)</label>
+              <select class="form-select" id="new-store-select">
+                <option value="" selected>Sin tienda asignada</option>
+              </select>
             </div>
             <button type="submit" class="btn btn-primary w-100 mt-2">
-                <i class="bi bi-save me-2"></i> Guardar Repartidor
+              <i class="bi bi-save me-2"></i> Guardar Repartidor
             </button>
           </form>
         </div>
@@ -159,7 +162,8 @@
         </div>
         <div class="modal-body">
           <div class="text-center mb-4">
-            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 80px; height: 80px;">
               <i class="bi bi-person text-secondary" style="font-size: 2.5rem;"></i>
             </div>
             <h4 class="mb-0" id="detalle-nombre">Nombre</h4>
@@ -201,7 +205,8 @@
             </div>
             <div class="col-6">
               <div class="border rounded p-2">
-                <h3 class="mb-0 fw-bold text-success" id="stat-pedidos">-</h3> <small class="text-muted">Pedidos Entregados</small>
+                <h3 class="mb-0 fw-bold text-success" id="stat-pedidos">-</h3> <small class="text-muted">Pedidos
+                  Entregados</small>
               </div>
             </div>
           </div>
@@ -215,7 +220,8 @@
   </div>
 
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body" id="toast-message"></div>
         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -259,61 +265,61 @@
 
     // 2. Cargar Tiendas para el Modal de Crear
     async function loadStoresForSelect() {
-        try {
-            const stores = await StoreAPI.list();
-            const select = document.getElementById('new-store-select');
-            // Mantener la opción por defecto
-            select.innerHTML = '<option value="" selected>Sin tienda asignada</option>';
-            
-            stores.forEach(store => {
-                const option = document.createElement('option');
-                option.value = store.id;
-                option.textContent = `${store.name} (${store.city || 'N/A'})`;
-                select.appendChild(option);
-            });
-        } catch (error) {
-            console.error("Error cargando tiendas:", error);
-        }
+      try {
+        const stores = await StoreAPI.list();
+        const select = document.getElementById('new-store-select');
+        // Mantener la opción por defecto
+        select.innerHTML = '<option value="" selected>Sin tienda asignada</option>';
+
+        stores.forEach(store => {
+          const option = document.createElement('option');
+          option.value = store.id;
+          option.textContent = `${store.name} (${store.city || 'N/A'})`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error cargando tiendas:", error);
+      }
     }
 
     // 3. Crear Repartidor (Lógica del Modal)
-    document.getElementById('newRepartidorForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
-        btn.disabled = true;
+    document.getElementById('newRepartidorForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
+      btn.disabled = true;
 
-        const userData = {
-            name: document.getElementById('new-nombre').value,
-            email: document.getElementById('new-email').value,
-            password: document.getElementById('new-password').value,
-            role: 'REPARTIDOR' // Rol fijo
-        };
-        const storeId = document.getElementById('new-store-select').value;
+      const userData = {
+        name: document.getElementById('new-nombre').value,
+        email: document.getElementById('new-email').value,
+        password: document.getElementById('new-password').value,
+        role: 'REPARTIDOR' // Rol fijo
+      };
+      const storeId = document.getElementById('new-store-select').value;
 
-        try {
-            // A. Crear Usuario
-            const newUser = await UserAPI.create(userData);
-            
-            // B. Asignar Tienda (si se seleccionó una)
-            if (storeId) {
-                await UserAPI.assignStore(newUser.id, storeId);
-            }
+      try {
+        // A. Crear Usuario
+        const newUser = await UserAPI.create(userData);
 
-            showToast(`Repartidor ${newUser.name} creado correctamente.`, 'success');
-            bootstrap.Modal.getInstance(document.getElementById('newRepartidorModal')).hide();
-            this.reset();
-            await loadRepartidores();
-
-        } catch (error) {
-            let msg = error.message;
-            if(msg.includes('409')) msg = 'El correo ya está registrado.';
-            showToast('Error: ' + msg, 'danger');
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+        // B. Asignar Tienda (si se seleccionó una)
+        if (storeId) {
+          await UserAPI.assignStore(newUser.id, storeId);
         }
+
+        showToast(`Repartidor ${newUser.name} creado correctamente.`, 'success');
+        bootstrap.Modal.getInstance(document.getElementById('newRepartidorModal')).hide();
+        this.reset();
+        await loadRepartidores();
+
+      } catch (error) {
+        let msg = error.message;
+        if (msg.includes('409')) msg = 'El correo ya está registrado.';
+        showToast('Error: ' + msg, 'danger');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
     });
 
     // 4. Renderizar Tabla
@@ -326,9 +332,9 @@
         return;
       }
 
-      repartidores.forEach(rep => {
+      repartidores.forEach((rep, index) => {
         const isActive = true; // Asumimos activo por ahora
-        const statusBadge = isActive 
+        const statusBadge = isActive
           ? '<span class="badge bg-success bg-opacity-10 text-success rounded-pill">Activo</span>'
           : '<span class="badge bg-secondary rounded-pill">Inactivo</span>';
 
@@ -337,7 +343,7 @@
 
         const row = `
           <tr>
-            <td class="ps-4 fw-bold text-muted">#${rep.id}</td>
+            <td class="ps-4 fw-bold text-muted">#${rep.id || 'N/A'}</td>
             <td>
               <div class="d-flex align-items-center">
                 <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
@@ -349,10 +355,10 @@
             <td class="text-muted">${rep.email}</td>
             <td>${statusBadge}</td>
             <td class="text-end pe-4">
-              <button class="btn btn-sm btn-outline-info me-1" onclick="openDetailModal(${rep.id})" title="Ver Detalles">
+              <button class="btn btn-sm btn-outline-info me-1" onclick="openDetailModal(${index})" title="Ver Detalles">
                 <i class="bi bi-eye"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger" onclick="deleteRepartidor(${rep.id}, '${rep.name}')" title="Eliminar">
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteRepartidor(${index})" title="Eliminar">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
@@ -373,15 +379,15 @@
     document.getElementById('search-input').addEventListener('input', filterRepartidores);
 
     // 6. Detalle
-    async function openDetailModal(id) {
-      const rep = allRepartidores.find(r => r.id === id);
+    async function openDetailModal(index) {
+      const rep = allRepartidores[index];
       if (!rep) return;
 
       document.getElementById('detalle-nombre').textContent = rep.name;
       document.getElementById('detalle-id').textContent = '#' + rep.id;
       document.getElementById('detalle-email').textContent = rep.email;
       document.getElementById('detalle-tienda').textContent = (rep.store && rep.store.name) ? rep.store.name : 'Sin tienda asignada';
-      
+
       document.getElementById('stat-visitas').innerHTML = '<div class="spinner-border spinner-border-sm"></div>';
       document.getElementById('stat-pedidos').innerHTML = '-';
 
@@ -389,7 +395,7 @@
       modal.show();
 
       try {
-        const visits = await VisitAPI.findByRepartidor(id);
+        const visits = await VisitAPI.findByRepartidor(rep.id);
         document.getElementById('stat-visitas').textContent = visits.length;
       } catch (e) {
         document.getElementById('stat-visitas').textContent = 'Err';
@@ -397,10 +403,13 @@
     }
 
     // 7. Eliminar
-    async function deleteRepartidor(id, name) {
+    async function deleteRepartidor(index) {
+      const rep = allRepartidores[index];
+      if (!rep) return;
+
       const result = await Swal.fire({
         title: '¿Eliminar repartidor?',
-        text: `Estás a punto de eliminar a "${name}".`,
+        text: `Estás a punto de eliminar a "${rep.name}".`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
@@ -410,7 +419,7 @@
 
       if (result.isConfirmed) {
         try {
-          await UserAPI.delete(id);
+          await UserAPI.delete(rep.id);
           showToast('Repartidor eliminado.', 'success');
           await loadRepartidores();
         } catch (error) {
@@ -435,4 +444,5 @@
     });
   </script>
 </body>
+
 </html>

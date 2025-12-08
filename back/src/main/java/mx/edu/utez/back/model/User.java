@@ -20,6 +20,9 @@ public class User {
     // Tiendas asignadas (IDs)
     private List<String> assignedStoreIds = new ArrayList<>();
 
+    // Store object for JSON responses (Firestore will ignore if null)
+    private Store store;
+
     // Token FCM para notificaciones push
     private String fcmToken;
 }
