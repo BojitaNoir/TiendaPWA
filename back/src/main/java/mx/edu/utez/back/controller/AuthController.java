@@ -24,15 +24,15 @@ public class AuthController {
             User user = userService.authenticate(request.getEmail(), request.getPassword());
             if (user != null) {
                 AuthResponse response = new AuthResponse(
-                    user.getId(),
-                    user.getName(),
-                    user.getEmail(),
-                    user.getRole().toString(),
-                    "Login exitoso"
-                );
+                        user.getId(), // String now
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRole().toString(),
+                        "Login exitoso");
                 return ResponseEntity.ok(response);
             }
-            return ResponseEntity.status(401).body(new AuthResponse(null, null, null, null, "Email o contraseña incorrectos"));
+            return ResponseEntity.status(401)
+                    .body(new AuthResponse(null, null, null, null, "Email o contraseña incorrectos"));
         } catch (Exception e) {
             return ResponseEntity.status(401).body(new AuthResponse(null, null, null, null, e.getMessage()));
         }
@@ -45,19 +45,20 @@ public class AuthController {
             user.setName(request.getName());
             user.setEmail(request.getEmail());
             user.setPassword(request.getPassword());
-            user.setRole(Role.valueOf(request.getRole() != null ? request.getRole() : "REPARTIDOR"));
-            
-            User createdUser = userService.create(user);
+            user.setRole(Role.REPARTIDOR); // Default role
+
+            User saved = userService.create(user);
+
             AuthResponse response = new AuthResponse(
-                createdUser.getId(),
-                createdUser.getName(),
-                createdUser.getEmail(),
-                createdUser.getRole().toString(),
-                "Usuario registrado exitosamente"
-            );
+                    saved.getId(),
+                    saved.getName(),
+                    saved.getEmail(),
+                    saved.getRole().toString(),
+                    "Registro exitoso");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new AuthResponse(null, null, null, null, "Error: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                    .body(new AuthResponse(null, null, null, null, "Error: " + e.getMessage()));
         }
     }
 

@@ -1,10 +1,10 @@
 // Fix aria-hidden issue with modals - executed immediately when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('show.bs.modal', function() {
+    modal.addEventListener('show.bs.modal', function () {
       this.removeAttribute('aria-hidden');
     });
-    modal.addEventListener('hide.bs.modal', function() {
+    modal.addEventListener('hide.bs.modal', function () {
       setTimeout(() => this.setAttribute('aria-hidden', 'true'), 150);
     });
   });
@@ -75,7 +75,7 @@ function showNotification(message, type = 'info') {
     z-index: 9999;
     animation: slideIn 0.3s ease-in-out;
   `;
-  
+
   if (type === 'success') {
     notification.style.backgroundColor = '#10b981';
   } else if (type === 'warning') {
@@ -84,87 +84,63 @@ function showNotification(message, type = 'info') {
     notification.style.backgroundColor = '#3b82f6';
   }
   notification.style.color = 'white';
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
     notification.remove();
   }, 3000);
 }
 
-// Solicitar permiso para notificaciones
-function requestNotificationPermission() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission()
-      .then(permission => {
-        console.log('Permiso de notificaciones:', permission);
-      });
-  }
-}
-
-// Sincronizar datos pendientes cuando vuelva la conexión
-async function syncPendingData() {
-  if ('serviceWorker' in navigator && 'SyncManager' in window) {
+// Solicitar permiso para notificaciones y configurar FCM
+async function setupPushNotifications() {
+  if ('Notification' in window && 'serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.ready;
-      await registration.sync.register('sync-pedidos');
-      console.log('Sincronización programada');
-    } catch (error) {
-      console.log('Error al programar sincronización:', error);
+      // 1. Solicitar permiso
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        console.log('Permiso de notificaciones concedido');
+
+        // 2. Obtener Token
+        const token = await messaging.getToken({ vapidKey: 'YOUR_PUBLIC_VAPID_KEY' }); // Optional VAPID
+        if (token) {
+          console.log('FCM Token:', token);
+
+          // 3. Enviar al backend si hay usuario logueado
+          const user = JSON.parse(localStorage.getItem('user'));
+          if (user && user.id) {
+            try {
+              await UserAPI.saveFcmToken(user.id, token);
+              console.log('Token enviado al backend');
+            } catch (e) {
+              console.error('Error enviando token al backend:', e);
+            }
+          }
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+
+        // 4. Manejar mensajes en primer plano
+        messaging.onMessage((payload) => {
+          console.log('Message received. ', payload);
+          const { title, body } = payload.notification || payload.data; // data payload or notification payload
+          showNotification(`${title}: ${body}`, 'info');
+        });
+
+      } else {
+        console.log('Permiso de notificaciones denegado');
+      }
+    } catch (err) {
+      console.log('Error al configurar notificaciones:', err);
     }
   }
 }
 
-// Detectar si está instalado como PWA
-function checkPWAInstallation() {
-  // Detectar si está en modo standalone (instalado como app)
-  const isStandalone = window.navigator.standalone === true ||
-                       window.matchMedia('(display-mode: standalone)').matches ||
-                       window.matchMedia('(display-mode: fullscreen)').matches;
-  
-  console.log('Modo standalone:', isStandalone);
-  
-  if (isStandalone) {
-    document.body.classList.add('pwa-installed');
-  }
-}
-
-// Manejar instalación de PWA
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallPrompt();
-});
-
-function showInstallPrompt() {
-  const installButton = document.getElementById('install-app-button');
-  if (installButton) {
-    installButton.style.display = 'block';
-    installButton.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`Usuario respondió a la instalación: ${outcome}`);
-        deferredPrompt = null;
-        installButton.style.display = 'none';
-      }
-    });
-  }
-}
-
-window.addEventListener('appinstalled', () => {
-  console.log('PWA instalada exitosamente');
-  showNotification('App instalada correctamente', 'success');
-  deferredPrompt = null;
-});
-
 // Inicializar cuando el documento esté listo
 document.addEventListener('DOMContentLoaded', () => {
   checkPWAInstallation();
-  requestNotificationPermission();
-  
+  setupPushNotifications(); // Llamar a la nueva función integrada
+
   // Cargar estilos para notificaciones
   addNotificationStyles();
 });

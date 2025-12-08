@@ -17,10 +17,9 @@ public class TemporaryAssignmentController {
     }
 
     @PostMapping
-    public ResponseEntity<TemporaryAssignment> assign(@RequestParam Long storeId,
-                                                      @RequestParam Long repartidorId,
-                                                      @RequestParam String date) {
-        LocalDate d = LocalDate.parse(date);
-        return ResponseEntity.ok(service.assign(storeId, repartidorId, d));
+    public ResponseEntity<TemporaryAssignment> assign(@RequestParam String storeId,
+            @RequestParam String repartidorId,
+            @RequestParam String date) {
+        return ResponseEntity.ok(service.assign(storeId, repartidorId, date));
     }
 }

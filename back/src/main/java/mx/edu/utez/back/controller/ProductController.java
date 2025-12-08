@@ -29,33 +29,40 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id) {
+    public ResponseEntity<Product> findById(@PathVariable String id) {
         Optional<Product> product = productService.findById(id);
         return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product p) {
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product p) {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             Product existing = product.get();
-            if (p.getName() != null) existing.setName(p.getName());
-            if (p.getSku() != null) existing.setSku(p.getSku());
-            if (p.getPrice() != null) existing.setPrice(p.getPrice());
-            if (p.getStock() != null) existing.setStock(p.getStock());
-            if (p.getDescription() != null) existing.setDescription(p.getDescription());
-            if (p.getPhotoBase64() != null) existing.setPhotoBase64(p.getPhotoBase64());
-            if (p.getQrCode() != null) existing.setQrCode(p.getQrCode());
-            if (p.getAvailable() != null) existing.setAvailable(p.getAvailable());
+            if (p.getName() != null)
+                existing.setName(p.getName());
+            if (p.getSku() != null)
+                existing.setSku(p.getSku());
+            if (p.getPrice() != null)
+                existing.setPrice(p.getPrice());
+            if (p.getStock() != null)
+                existing.setStock(p.getStock());
+            if (p.getDescription() != null)
+                existing.setDescription(p.getDescription());
+            if (p.getPhotoBase64() != null)
+                existing.setPhotoBase64(p.getPhotoBase64());
+            if (p.getQrCode() != null)
+                existing.setQrCode(p.getQrCode());
+            if (p.getAvailable() != null)
+                existing.setAvailable(p.getAvailable());
             return ResponseEntity.ok(productService.create(existing));
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
-

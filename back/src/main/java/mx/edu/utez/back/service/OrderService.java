@@ -3,11 +3,11 @@ package mx.edu.utez.back.service;
 import mx.edu.utez.back.model.*;
 import mx.edu.utez.back.repository.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -15,16 +15,13 @@ public class OrderService {
     private final ProductRepository productRepo;
     private final StoreRepository storeRepo;
     private final UserRepository userRepo;
-
-    // 🔔 1. Declaramos el servicio de notificaciones
     private final NotificationService notificationService;
 
-    // 🔔 2. Lo agregamos al Constructor (Inyección de Dependencias)
     public OrderService(OrderRepository orderRepo,
-                        ProductRepository productRepo,
-                        StoreRepository storeRepo,
-                        UserRepository userRepo,
-                        NotificationService notificationService) {
+            ProductRepository productRepo,
+            StoreRepository storeRepo,
+            UserRepository userRepo,
+            NotificationService notificationService) {
         this.orderRepo = orderRepo;
         this.productRepo = productRepo;
         this.storeRepo = storeRepo;
@@ -33,94 +30,124 @@ public class OrderService {
     }
 
     public List<Order> findAll() {
-        return orderRepo.findAll();
+        try {
+            return orderRepo.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding orders", e);
+        }
     }
 
-    @Transactional
     public Order create(Order orderData) {
-        Order newOrder = new Order();
-        newOrder.setClientName(orderData.getClientName());
-        newOrder.setCreatedAt(LocalDateTime.now());
-        newOrder.setStatus("PENDIENTE");
+        try {
+            Order newOrder = new Order();
+            newOrder.generateId();
+            newOrder.setClientName(orderData.getClientName());
+            newOrder.setCreatedAt(LocalDateTime.now().toString());
+            newOrder.setStatus("PENDIENTE");
 
-        // 1. Asignar Tienda
-        if (orderData.getStore() != null && orderData.getStore().getId() != null) {
-            Store store = storeRepo.findById(orderData.getStore().getId())
-                    .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
-            newOrder.setStore(store);
-        }
-
-        // 2. Procesar Productos
-        double totalCalculado = 0.0;
-        List<OrderItem> itemsFinales = new ArrayList<>();
-
-        if (orderData.getItems() != null) {
-            for (OrderItem itemDTO : orderData.getItems()) {
-                Product p = productRepo.findById(itemDTO.getProduct().getId())
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-                if (p.getStock() < itemDTO.getQuantity()) {
-                    throw new RuntimeException("Stock insuficiente para: " + p.getName());
+            // 1. Asignar Tienda (Validar que exista)
+            if (orderData.getStoreId() != null) {
+                Store store = storeRepo.findById(orderData.getStoreId());
+                if (store == null) {
+                    throw new RuntimeException("Tienda no encontrada");
                 }
-
-                p.setStock(p.getStock() - itemDTO.getQuantity());
-                productRepo.save(p);
-
-                OrderItem item = new OrderItem();
-                item.setProduct(p);
-                item.setQuantity(itemDTO.getQuantity());
-                item.setPrice(p.getPrice());
-                item.setOrder(newOrder);
-
-                itemsFinales.add(item);
-                totalCalculado += p.getPrice() * itemDTO.getQuantity();
+                newOrder.setStoreId(store.getId());
             }
+
+            // 2. Procesar Productos
+            double totalCalculado = 0.0;
+            List<OrderItem> itemsFinales = new ArrayList<>();
+
+            if (orderData.getItems() != null) {
+                for (OrderItem itemDTO : orderData.getItems()) {
+                    // Validar producto
+                    if (itemDTO.getProductId() == null)
+                        continue;
+
+                    Product p = productRepo.findById(itemDTO.getProductId());
+                    if (p == null) {
+                        throw new RuntimeException("Producto no encontrado: " + itemDTO.getProductId());
+                    }
+
+                    if (p.getStock() < itemDTO.getQuantity()) {
+                        throw new RuntimeException("Stock insuficiente para: " + p.getName());
+                    }
+
+                    // Actualizar stock
+                    p.setStock(p.getStock() - itemDTO.getQuantity());
+                    productRepo.save(p, p.getId());
+
+                    // Crear Item
+                    OrderItem item = new OrderItem();
+                    item.setId(UUID.randomUUID().toString()); // Generar ID para el item
+                    item.setProductId(p.getId());
+                    item.setQuantity(itemDTO.getQuantity());
+                    item.setPrice(p.getPrice());
+
+                    itemsFinales.add(item);
+                    totalCalculado += p.getPrice() * itemDTO.getQuantity();
+                }
+            }
+
+            newOrder.setItems(itemsFinales);
+            newOrder.setTotalPrice(totalCalculado);
+
+            // Guardar orden
+            orderRepo.save(newOrder, newOrder.getId());
+
+            // 🔔 3. Notificar creación del pedido
+            notificationService.registrarEvento(
+                    "Nuevo Pedido",
+                    "Se recibió el pedido #" + newOrder.getId() + " de " + newOrder.getClientName() + " ($"
+                            + newOrder.getTotalPrice() + ")",
+                    "info");
+
+            return newOrder;
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating order", e);
         }
-
-        newOrder.setItems(itemsFinales);
-        newOrder.setTotalPrice(totalCalculado);
-
-        Order savedOrder = orderRepo.save(newOrder);
-
-        // 🔔 3. Notificar creación del pedido
-        notificationService.registrarEvento(
-                "Nuevo Pedido",
-                "Se recibió el pedido #" + savedOrder.getId() + " de " + savedOrder.getClientName() + " ($" + savedOrder.getTotalPrice() + ")",
-                "info"
-        );
-
-        return savedOrder;
     }
 
-    @Transactional
-    public Order update(Long id, Order orderDetails) {
-        Order order = orderRepo.findById(id).orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+    public Order update(String id, Order orderDetails) {
+        try {
+            Order order = orderRepo.findById(id);
+            if (order == null)
+                throw new RuntimeException("Pedido no encontrado");
 
-        // Actualizar estado
-        if (orderDetails.getStatus() != null) {
-            String oldStatus = order.getStatus();
-            order.setStatus(orderDetails.getStatus());
+            // Actualizar estado
+            if (orderDetails.getStatus() != null) {
+                String oldStatus = order.getStatus();
+                order.setStatus(orderDetails.getStatus());
 
-            // 🔔 4. Notificar si se completó la entrega
-            if (!"COMPLETADO".equals(oldStatus) && "COMPLETADO".equals(orderDetails.getStatus())) {
-                notificationService.registrarEvento(
-                        "Entrega Exitosa",
-                        "El pedido #" + order.getId() + " ha sido entregado al cliente.",
-                        "success"
-                );
+                // 🔔 4. Notificar si se completó la entrega
+                if (!"COMPLETADO".equals(oldStatus) && "COMPLETADO".equals(orderDetails.getStatus())) {
+                    notificationService.registrarEvento(
+                            "Entrega Exitosa",
+                            "El pedido #" + order.getId() + " ha sido entregado al cliente.",
+                            "success");
+                }
             }
-        }
 
-        // Asignar repartidor
-        if (orderDetails.getRepartidor() != null && orderDetails.getRepartidor().getId() != null) {
-            User rep = userRepo.findById(orderDetails.getRepartidor().getId()).orElse(null);
-            order.setRepartidor(rep);
-        }
+            // Asignar repartidor
+            if (orderDetails.getRepartidorId() != null) {
+                User rep = userRepo.findById(orderDetails.getRepartidorId());
+                if (rep != null) {
+                    order.setRepartidorId(rep.getId());
+                }
+            }
 
-        return orderRepo.save(order);
+            orderRepo.save(order, id);
+            return order;
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating order", e);
+        }
     }
 
-    public void delete(Long id) {
-        orderRepo.deleteById(id);
+    public void delete(String id) {
+        try {
+            orderRepo.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting order", e);
+        }
     }
 }

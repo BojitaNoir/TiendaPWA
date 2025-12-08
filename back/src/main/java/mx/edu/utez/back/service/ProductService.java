@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProductService {
@@ -16,18 +17,37 @@ public class ProductService {
     }
 
     public Product create(Product p) {
-        return productRepository.save(p);
+        try {
+            String id = productRepository.save(p, p.getId());
+            p.setId(id);
+            return p;
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating product", e);
+        }
     }
 
     public List<Product> findAll() {
-        return productRepository.findAll();
+        try {
+            return productRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding products", e);
+        }
     }
 
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    public Optional<Product> findById(String id) {
+        try {
+            Product p = productRepository.findById(id);
+            return Optional.ofNullable(p);
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding product", e);
+        }
     }
 
-    public void delete(Long id) {
-        productRepository.deleteById(id);
+    public void delete(String id) {
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting product", e);
+        }
     }
 }

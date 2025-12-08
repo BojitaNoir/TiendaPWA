@@ -9,7 +9,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+        RequestMethod.DELETE })
 public class OrderController {
     private final OrderService orderService;
 
@@ -38,7 +39,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Order order) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Order order) {
         try {
             return ResponseEntity.ok(orderService.update(id, order));
         } catch (Exception e) {
@@ -47,7 +48,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         orderService.delete(id);
         return ResponseEntity.noContent().build();
     }

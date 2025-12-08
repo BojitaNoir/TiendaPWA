@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Tienda UCQ - Sistema de gestión de pedidos, tiendas y entregas">
   <meta name="theme-color" content="#2563eb">
   <meta name="color-scheme" content="light dark">
-  
+
   <!-- Apple Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Tienda UCQ">
   <link rel="apple-touch-icon" href="/front/assets/icons/icon-192x192.png">
-  
+
   <!-- Progressive Web App -->
   <link rel="manifest" href="/front/manifest.json">
   <link rel="icon" type="image/png" href="/front/assets/icons/icon-192x192.png">
-  
+
   <!-- Bootstrap CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
-  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+    rel="stylesheet">
+
   <!-- Custom Stylesheets -->
   <link rel="stylesheet" href="/front/css/admin.css">
-  
+
   <style>
     :root {
       --primary-color: #2563eb;
@@ -124,8 +126,15 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
     }
 
     .hero {
@@ -383,6 +392,7 @@
         transform: translateY(100px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -407,9 +417,10 @@
       }
     }
   </style>
-  
+
   <title>Tienda UCQ - Sistema de Gestión</title>
 </head>
+
 <body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light sticky-top">
@@ -551,6 +562,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
   <!-- PWA Scripts -->
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
+  <script src="/front/js/firebase-init.js"></script>
+
   <script src="/front/js/app.js"></script>
   <script src="/front/js/offline.js"></script>
 
@@ -572,4 +588,5 @@
     updateConnectionStatus();
   </script>
 </body>
+
 </html>

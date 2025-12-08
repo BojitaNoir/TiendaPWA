@@ -1,10 +1,11 @@
 package mx.edu.utez.back.repository;
 
 import mx.edu.utez.back.model.Notification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    // Para obtener las más recientes primero
-    List<Notification> findAllByOrderByDateDesc();
+@Repository
+public class NotificationRepository extends AbstractFirestoreRepository<Notification> {
+    public NotificationRepository() {
+        super("notifications", Notification.class);
+    }
 }

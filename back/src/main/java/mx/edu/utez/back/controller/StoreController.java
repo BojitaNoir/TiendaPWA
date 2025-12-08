@@ -38,7 +38,7 @@ public class StoreController {
 
     // 🆕 NUEVO: Método para eliminar una tienda
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         storeService.delete(id);
         return ResponseEntity.noContent().build();
     }

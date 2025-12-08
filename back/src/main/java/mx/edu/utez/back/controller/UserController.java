@@ -27,14 +27,23 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/assign-store/{storeId}")
-    public ResponseEntity<User> assignStore(@PathVariable Long userId, @PathVariable Long storeId) {
+    public ResponseEntity<User> assignStore(@PathVariable String userId, @PathVariable String storeId) {
         return ResponseEntity.ok(userService.assignStore(userId, storeId));
     }
 
     // 🆕 NUEVO: Método para eliminar un usuario
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/fcm-token")
+    public ResponseEntity<Void> saveFcmToken(@PathVariable String id, @RequestBody String token) {
+        // El token puede venir con comillas extra si es JSON string simple, limpiamos
+        // por si acaso
+        String cleanToken = token.replace("\"", "");
+        userService.saveFcmToken(id, cleanToken);
+        return ResponseEntity.ok().build();
     }
 }

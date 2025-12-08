@@ -1,25 +1,15 @@
 package mx.edu.utez.back.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-@Entity
-@Table(name = "temporary_assignments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TemporaryAssignment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    private Store store;
-
-    @ManyToOne
-    private User repartidor;
-
-    private LocalDate date; // date of temporary visit
+    private String id;
+    private String storeId;
+    private String repartidorId;
+    private String date; // ISO String for LocalDate
 }

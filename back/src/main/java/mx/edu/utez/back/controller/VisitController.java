@@ -18,16 +18,16 @@ public class VisitController {
 
     @PostMapping("/scan")
     public ResponseEntity<Visit> scan(@RequestParam String storeCode,
-                                      @RequestParam Long repartidorId,
-                                      @RequestParam(required = false) Double lat,
-                                      @RequestParam(required = false) Double lng,
-                                      @RequestParam(defaultValue = "false") boolean hadOrder,
-                                      @RequestParam(defaultValue = "false") boolean temporary) {
+            @RequestParam String repartidorId,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng,
+            @RequestParam(defaultValue = "false") boolean hadOrder,
+            @RequestParam(defaultValue = "false") boolean temporary) {
         return ResponseEntity.ok(visitService.registerScan(storeCode, repartidorId, lat, lng, hadOrder, temporary));
     }
 
     @GetMapping("/by-repartidor/{id}")
-    public ResponseEntity<List<Visit>> byRepartidor(@PathVariable Long id) {
+    public ResponseEntity<List<Visit>> byRepartidor(@PathVariable String id) {
         return ResponseEntity.ok(visitService.findByRepartidor(id));
     }
 }

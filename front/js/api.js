@@ -27,7 +27,7 @@ async function apiCall(endpoint, options = {}) {
 
     try {
         const response = await fetch(url, config);
-        
+
         // Manejar respuestas sin contenido (204 No Content)
         if (response.status === 204) {
             return null;
@@ -36,7 +36,7 @@ async function apiCall(endpoint, options = {}) {
         // Intentar leer el cuerpo como JSON
         const text = await response.text();
         const data = text ? JSON.parse(text) : {};
-        
+
         if (!response.ok) {
             // Manejar errores con más detalle
             const errorMessage = data.message || `Error: ${response.status} - ${response.statusText}`;
@@ -44,7 +44,7 @@ async function apiCall(endpoint, options = {}) {
             error.status = response.status; // Guardar status para manejo específico (ej: 401, 409)
             throw error;
         }
-        
+
         return data;
     } catch (error) {
         console.error(`API Error [${endpoint}]:`, error);
@@ -135,6 +135,13 @@ const UserAPI = {
         return apiCall(`/users/${id}`, {
             method: 'DELETE'
         });
+    },
+
+    saveFcmToken: async (userId, token) => {
+        return apiCall(`/users/${userId}/fcm-token`, {
+            method: 'POST',
+            body: token // Sending raw string as body, handled in backend
+        });
     }
 };
 
@@ -156,14 +163,14 @@ const StoreAPI = {
     update: async (id, store) => { // Ajustado para recibir ID explícito si es necesario
         // Si tu backend usa PUT /api/stores (sin ID en URL), usa la línea comentada abajo
         // return apiCall('/stores', { method: 'PUT', body: JSON.stringify(store) });
-        
+
         // Si usa PUT /api/stores/{id}
         return apiCall(`/stores/${id}`, { // Asegúrate que tu backend soporte esto, o cambia a la opción de arriba
-             method: 'PUT',
-             body: JSON.stringify(store)
+            method: 'PUT',
+            body: JSON.stringify(store)
         });
     },
-  
+
     delete: async (id) => {
         return apiCall(`/stores/${id}`, {
             method: 'DELETE'
@@ -192,7 +199,7 @@ const OrderAPI = {
             body: JSON.stringify(order)
         });
     },
-    
+
     delete: async (id) => {
         return apiCall(`/orders/${id}`, {
             method: 'DELETE'
