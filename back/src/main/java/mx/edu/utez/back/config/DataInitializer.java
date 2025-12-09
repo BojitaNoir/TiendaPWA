@@ -130,16 +130,38 @@ public class DataInitializer {
                             "Detergente Ariel 1kg"
                     };
 
+                    String[] skus = {
+                            "BEB-001", "PS-01", "PAN-001",
+                            "LAC-001", "HUE-001", "ACE-001",
+                            "AZU-001", "FRI-001", "ARR-001",
+                            "LIM-001"
+                    };
+
+                    String[] descriptions = {
+                            "Refresco sabor cola de 600ml, ideal para acompañar tus comidas.",
+                            "Papas fritas clásicas, crujientes y con el toque exacto de sal.",
+                            "Pan blanco grande, suave y perfecto para sándwiches.",
+                            "Leche entera pasteurizada, rica en calcio y vitaminas.",
+                            "Huevo blanco fresco selecccionado, paquete con 12 piezas.",
+                            "Aceite vegetal comestible, ideal para cocinar todos tus platillos.",
+                            "Azúcar de caña estándar, endulzante natural.",
+                            "Frijol negro limpio, seleccionado y listo para cocer.",
+                            "Arroz súper extra grano largo, no se bate ni se pega.",
+                            "Detergente en polvo multiusos, arranca la grasa y las manchas."
+                    };
+
                     double[] prices = { 15.0, 18.0, 35.0, 22.0, 45.0, 38.0, 28.0, 32.0, 25.0, 65.0 };
                     int[] stocks = { 50, 40, 30, 25, 20, 15, 35, 28, 30, 18 };
 
                     for (int i = 0; i < productNames.length; i++) {
                         Product product = new Product();
                         product.setName(productNames[i]);
+                        product.setSku(skus[i]);
+                        product.setDescription(descriptions[i]);
                         product.setPrice(prices[i]);
                         product.setStock(stocks[i]);
                         productRepo.save(product, null);
-                        System.out.println("   ✅ " + productNames[i] + " ($" + prices[i] + ")");
+                        System.out.println("   ✅ " + productNames[i] + " ($" + prices[i] + ") [" + skus[i] + "]");
                     }
 
                     // ═══════════════════════════════════════════════════
