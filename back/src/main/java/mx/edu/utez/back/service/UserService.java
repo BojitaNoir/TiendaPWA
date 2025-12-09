@@ -68,7 +68,22 @@ public class UserService {
 
     public Optional<User> findById(String id) {
         try {
-            return Optional.ofNullable(userRepository.findById(id));
+            User user = userRepository.findById(id);
+            if (user == null) {
+                return Optional.empty();
+            }
+            
+            // Populate store if user has mainStoreId
+            if (user.getMainStoreId() != null) {
+                try {
+                    Store store = storeRepository.findById(user.getMainStoreId());
+                    user.setStore(store);
+                } catch (Exception e) {
+                    // Store not found, leave null
+                }
+            }
+            
+            return Optional.of(user);
         } catch (Exception e) {
             throw new RuntimeException("Error finding user", e);
         }

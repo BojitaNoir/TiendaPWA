@@ -66,4 +66,9 @@ public class AuthController {
     public ResponseEntity<?> logout() {
         return ResponseEntity.ok(new AuthResponse(null, null, null, null, "Logout exitoso"));
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("OK");
+    }
 }

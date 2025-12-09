@@ -26,6 +26,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        return userService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/{userId}/assign-store/{storeId}")
     public ResponseEntity<User> assignStore(@PathVariable String userId, @PathVariable String storeId) {
         return ResponseEntity.ok(userService.assignStore(userId, storeId));

@@ -141,12 +141,11 @@ public class OrderService {
             // Guardar orden
             orderRepo.save(newOrder, newOrder.getId());
 
-            // 🔔 3. Notificar creación del pedido
-            notificationService.registrarEvento(
-                    "Nuevo Pedido",
-                    "Se recibió el pedido #" + newOrder.getId() + " de " + newOrder.getClientName() + " ($"
-                            + newOrder.getTotalPrice() + ")",
-                    "info");
+            // 🔔 3. Notificar creación del pedido usando método específico
+            notificationService.notificarNuevoPedido(
+                    newOrder.getId(),
+                    newOrder.getClientName(),
+                    newOrder.getTotalPrice());
 
             return newOrder;
         } catch (Exception e) {

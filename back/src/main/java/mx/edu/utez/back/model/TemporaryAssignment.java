@@ -12,4 +12,7 @@ public class TemporaryAssignment {
     private String storeId;
     private String repartidorId;
     private String date; // ISO String for LocalDate
+
+    // Full Store object for JSON responses (Firestore will ignore if null)
+    private Store store;
 }
